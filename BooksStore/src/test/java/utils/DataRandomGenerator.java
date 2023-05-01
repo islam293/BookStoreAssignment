@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* A Class to generate a random string containing 1 uppercase, 1 lowercase,
+ 1 number & 1 special character at least*/
 public class DataRandomGenerator {
     public static final String ALPHABETIC_UPPERCASE_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static final String ALPHABETIC_LOWERCASE_SYMBOLS = "abcdefghijklmnopqrstuvwxyz";
     public static final String NUMERIC_SYMBOLS = "0123456789";
-    public static final String SPECIAL_SYMBOLS = "*$&@?<>!%#";
+    public static final String SPECIAL_SYMBOLS = "*$&@!%#";
 
     public static final String ALPHANUMERIC_AND_SPECIAL_SYMBOLS =
             ALPHABETIC_UPPERCASE_SYMBOLS +

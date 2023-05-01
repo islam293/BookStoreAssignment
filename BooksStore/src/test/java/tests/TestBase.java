@@ -1,59 +1,38 @@
 package tests;
 
-import bookstore.Builders.BookStoreURI;
-import bookstore.Builders.SpecBuilders;
-import bookstore.pojoModels.Credentials;
-import bookstore.pojoModels.ISBNList;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
+/*A class that contains all the methods to run the test */
 public class TestBase {
 
-    public Response getBookList(){
+    //Declare the Driver
+    public static WebDriver driver;
+    protected WebDriverWait wait;
 
-        Response response =  RestAssured.given(SpecBuilders.getRequestSpec()).
-                when().get(BookStoreURI.booksPath).
-                then().spec(SpecBuilders.getResponseSpec()).and().extract().response();
+    //Open the browser for UI Test
+    public void startDriver() {
 
-        return response;
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
     }
 
-    public Response createUser(Credentials credentials){
-
-        Response response =  RestAssured.given(SpecBuilders.getRequestSpec()).
-                body(credentials).
-                when().post(BookStoreURI.userPath).
-                then().spec(SpecBuilders.getResponseSpec()).and().extract().response();
-
-        return response;
+    /* open the required page before any test cases to make sure
+     that the steps are the same for every test case */
+    public void navigateToURL() {
+        String url= "https://demoqa.com/";
+        driver.navigate().to(url);
+        /* Set implicit time for the driver to wait after opening the driver to allow
+        the page to be fully loaded */
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
 
-    public Response generateUserToken(Credentials credentials){
-        Response response =  RestAssured.given(SpecBuilders.getRequestSpec()).
-                body(credentials).
-                when().post(BookStoreURI.tokenPath).
-                then().spec(SpecBuilders.getResponseSpec()).and().extract().response();
-
-        return response;
+    //Close the browser after finishing the test case to clear cache
+    public void closeBrowser(){
+        driver.quit();
     }
-    public Response checkAuthUser(Credentials credentials){
-        Response response =  RestAssured.given(SpecBuilders.getRequestSpec()).
-                body(credentials).
-                when().post(BookStoreURI.authPath).
-                then().spec(SpecBuilders.getResponseSpec()).and().extract().response();
-
-        return response;
-    }
-
-    public Response addBooksToUserList(ISBNList isbnList,String bearerToken){
-        Response response =  RestAssured.given(SpecBuilders.getRequestSpec())
-                .header("Authorization",
-                        "Bearer " + bearerToken).
-                body(isbnList).
-                when().post(BookStoreURI.booksPath).
-                then().spec(SpecBuilders.getResponseSpec()).and().extract().response();
-
-        return response;
-    }
-
 }
